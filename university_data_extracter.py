@@ -26,7 +26,7 @@ class UniversityData():
         
         site = "https://yocket.in/universities/study-in-" + region
         
-        self.university_df = pd.DataFrame(columns = ["Name", "link"])
+        self.university_df = pd.DataFrame(columns = ["Name", "Rank", "link"])
         
         while(True):
             page = self.load_page(site)
@@ -59,11 +59,11 @@ class UniversityData():
         for university in university_list:
             university_link = "https://yocket.in" + university.find("a", href = True)["href"]
             university_name = university.find("a", href = True).get_text()
-            
-            self.university_df = self.university_df.append({"Name" : university_name, "link" : university_link}, ignore_index = True)
-        
-       
-        
+            university_rank = university.find("div", class_ = "col-sm-3").get_text()
+            self.university_df = self.university_df.append({"Name" : university_name, 
+                                                            "link" : university_link, 
+                                                            "Rank" : re.sub(r"\W", "", university_rank)}, ignore_index = True)
+                
         
 if __name__ == "__main__":
     data = UniversityData("germany")
